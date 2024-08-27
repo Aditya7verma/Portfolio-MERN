@@ -15,9 +15,12 @@ function AdminCourses() {
   const [selectedItemForEdit, setSelectedItemForEdit] = React.useState(null);
   const [type, setType] = React.useState("add");
 
+  //   To Reset the Entity Form When click on diff certificate or add Certificate
+  const [form] = Form.useForm();
+
   const onFinish = async (values) => {
     // This is for as Technologies is in string to convert it in Array
-    const tempTechnologies = values.technologies.split(",");
+    const tempTechnologies = values.technologies.split(",") || [];
     values.technologies = tempTechnologies;
     try {
       dispatch(ShowLoading());
@@ -25,7 +28,7 @@ function AdminCourses() {
 
       if (selectedItemForEdit) {
         response = await axios.post(
-          "http://localhost:5000/api/portfolio/update-course",
+          "https://portfolio-mern-1-78st.onrender.com/api/portfolio/update-course",
           {
             ...values,
             _id: selectedItemForEdit._id,
@@ -33,7 +36,7 @@ function AdminCourses() {
         );
       } else {
         response = await axios.post(
-          "http://localhost:5000/api/portfolio/add-course",
+          "https://portfolio-mern-1-78st.onrender.com/api/portfolio/add-course",
           values
         );
       }
@@ -58,7 +61,7 @@ function AdminCourses() {
     try {
       dispatch(ShowLoading());
       const response = await axios.post(
-        "http://localhost:5000/api/portfolio/delete-course",
+        "https://portfolio-mern-1-78st.onrender.com/api/portfolio/delete-course",
         {
           _id: item._id,
         }
@@ -84,7 +87,8 @@ function AdminCourses() {
           onClick={() => {
             setSelectedItemForEdit(null);
             setShowAddEditModal(true);
-            setType("add");
+            form.resetFields();
+            // setType("add");
           }}
         >
           Add course
@@ -120,8 +124,9 @@ function AdminCourses() {
                 className="bg-primary text-white px-5 py-2 "
                 onClick={() => {
                   setSelectedItemForEdit(course);
+                  form.setFieldsValue(certificate);
                   setShowAddEditModal(true);
-                  setType("edit");
+                  // setType("edit");
                 }}
               >
                 Edit
@@ -131,62 +136,63 @@ function AdminCourses() {
         ))}
       </div>
 
-      {(type === "add" || selectedItemForEdit) && (
-        <Modal
-          visible={showAddEditModal}
-          title={selectedItemForEdit ? "Edit course" : "Add course"}
-          footer={null}
-          onCancel={() => {
-            setShowAddEditModal(false);
-            setSelectedItemForEdit(null);
-          }}
+      {/* {(type === "add" || selectedItemForEdit) && ( */}
+      <Modal
+        open={showAddEditModal}
+        title={selectedItemForEdit ? "Edit course" : "Add course"}
+        footer={null}
+        onCancel={() => {
+          setShowAddEditModal(false);
+          setSelectedItemForEdit(null);
+        }}
+      >
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+          initialValues={
+            {
+              ...selectedItemForEdit,
+              technologies: selectedItemForEdit?.technologies.join(", "),
+            } || {}
+          }
         >
-          <Form
-            layout="vertical"
-            onFinish={onFinish}
-            initialValues={
-              {
-                ...selectedItemForEdit,
-                technologies: selectedItemForEdit?.technologies.join(", "),
-              } || {}
-            }
-          >
-            <Form.Item name="title" label="Title">
-              <Input placeholder="Title" />
-            </Form.Item>
-            <Form.Item name="image" label="Image URL">
-              <Input placeholder="Image" />
-            </Form.Item>
+          <Form.Item name="title" label="Title">
+            <Input placeholder="Title" />
+          </Form.Item>
+          <Form.Item name="image" label="Image URL">
+            <Input placeholder="Image" />
+          </Form.Item>
 
-            <Form.Item name="description" label="Description">
-              <textarea placeholder="Description" />
-            </Form.Item>
+          <Form.Item name="description" label="Description">
+            <textarea placeholder="Description" />
+          </Form.Item>
 
-            <Form.Item name="link" label="Link">
-              <Input placeholder="Link" />
-            </Form.Item>
+          <Form.Item name="link" label="Link">
+            <Input placeholder="Link" />
+          </Form.Item>
 
-            <Form.Item name="technologies" label="Technologies">
-              <Input placeholder="Technologies" />
-            </Form.Item>
+          <Form.Item name="technologies" label="Technologies">
+            <Input placeholder="Technologies" />
+          </Form.Item>
 
-            <div className="flex justify-end">
-              <button
-                className="border-primary text-primary px-5 py-2"
-                onClick={() => {
-                  setShowAddEditModal(false);
-                  setSelectedItemForEdit(null);
-                }}
-              >
-                Cancel
-              </button>
-              <button className="bg-primary text-white px-5 py-2" type="submit">
-                {selectedItemForEdit ? "Update" : "Add"}
-              </button>
-            </div>
-          </Form>
-        </Modal>
-      )}
+          <div className="flex justify-end">
+            {/* <button
+              className="border-primary text-primary px-5 py-2"
+              onClick={() => {
+                setShowAddEditModal(false);
+                setSelectedItemForEdit(null);
+              }}
+            >
+              Cancel
+            </button> */}
+            <button className="bg-primary text-white px-5 py-2" type="submit">
+              {selectedItemForEdit ? "Update" : "Add"}
+            </button>
+          </div>
+        </Form>
+      </Modal>
+      {/* )} */}
     </div>
   );
 }

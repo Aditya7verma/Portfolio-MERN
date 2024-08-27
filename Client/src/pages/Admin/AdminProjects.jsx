@@ -15,6 +15,9 @@ function AdminProjects() {
   const [selectedItemForEdit, setSelectedItemForEdit] = React.useState(null);
   const [type, setType] = React.useState("add");
 
+  //   To Reset the Entity Form When click on diff certificate or add Certificate
+  const [form] = Form.useForm();
+
   const onFinish = async (values) => {
     // This is for as Technologies is in string to convert it in Array
     const tempTechnologies = values.technologies.split(",");
@@ -25,7 +28,7 @@ function AdminProjects() {
 
       if (selectedItemForEdit) {
         response = await axios.post(
-          "http://localhost:5000/api/portfolio/update-project",
+          "https://portfolio-mern-1-78st.onrender.com/api/portfolio/update-project",
           {
             ...values,
             _id: selectedItemForEdit._id,
@@ -33,7 +36,7 @@ function AdminProjects() {
         );
       } else {
         response = await axios.post(
-          "http://localhost:5000/api/portfolio/add-project",
+          "https://portfolio-mern-1-78st.onrender.com/api/portfolio/add-project",
           values
         );
       }
@@ -58,7 +61,7 @@ function AdminProjects() {
     try {
       dispatch(ShowLoading());
       const response = await axios.post(
-        "http://localhost:5000/api/portfolio/delete-project",
+        "https://portfolio-mern-1-78st.onrender.com/api/portfolio/delete-project",
         {
           _id: item._id,
         }
@@ -84,7 +87,8 @@ function AdminProjects() {
           onClick={() => {
             setSelectedItemForEdit(null);
             setShowAddEditModal(true);
-            setType("add");
+            form.resetFields();
+            // setType("add");
           }}
         >
           Add Project
@@ -120,8 +124,9 @@ function AdminProjects() {
                 className="bg-primary text-white px-5 py-2 "
                 onClick={() => {
                   setSelectedItemForEdit(project);
+                  form.setFieldsValue(project);
                   setShowAddEditModal(true);
-                  setType("edit");
+                  // setType("edit");
                 }}
               >
                 Edit
@@ -131,9 +136,9 @@ function AdminProjects() {
         ))}
       </div>
 
-      {(type === "add" || selectedItemForEdit) && (
+      {/* {(type === "add" || selectedItemForEdit) && ( */}
         <Modal
-          visible={showAddEditModal}
+          open={showAddEditModal}
           title={selectedItemForEdit ? "Edit Project" : "Add Project"}
           footer={null}
           onCancel={() => {
@@ -142,14 +147,15 @@ function AdminProjects() {
           }}
         >
           <Form
+            form={form}
             layout="vertical"
             onFinish={onFinish}
-            initialValues={
-              {
-                ...selectedItemForEdit,
-                technologies: selectedItemForEdit?.technologies.join(", "),
-              } || {}
-            }
+            // initialValues={
+            //   {
+            //     ...selectedItemForEdit,
+            //     technologies: selectedItemForEdit?.technologies.join(", "),
+            //   } || {}
+            // }
           >
             <Form.Item name="title" label="Title">
               <Input placeholder="Title" />
@@ -171,7 +177,7 @@ function AdminProjects() {
             </Form.Item>
 
             <div className="flex justify-end">
-              <button
+              {/* <button
                 className="border-primary text-primary px-5 py-2"
                 onClick={() => {
                   setShowAddEditModal(false);
@@ -179,14 +185,14 @@ function AdminProjects() {
                 }}
               >
                 Cancel
-              </button>
+              </button> */}
               <button className="bg-primary text-white px-5 py-2" type="submit">
                 {selectedItemForEdit ? "Update" : "Add"}
               </button>
             </div>
           </Form>
         </Modal>
-      )}
+      {/* )} */}
     </div>
   );
 }

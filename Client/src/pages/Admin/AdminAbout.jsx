@@ -11,14 +11,14 @@ function AdminAbout() {
 
   const onFinish = async (values) => {
     try {
-    // This is for as Skills is in string to convert it in Array
-      
+      // This is for as Skills is in string to convert it in Array
+
       const tempSkills = values.skills.split(",");
       values.skills = tempSkills;
 
       dispatch(ShowLoading());
       const response = await axios.post(
-        "http://localhost:5000/api/portfolio/update-about",
+        "https://portfolio-mern-1-78st.onrender.com/api/portfolio/update-about",
         {
           ...values,
           _id: portfolioData.about._id,
