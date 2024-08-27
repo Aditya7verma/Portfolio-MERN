@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// env
 mongoose.connect(process.env.mongo_url);
 
 const connection = mongoose.connection;
