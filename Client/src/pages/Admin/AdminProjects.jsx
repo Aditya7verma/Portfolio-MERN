@@ -28,7 +28,7 @@ function AdminProjects() {
 
       if (selectedItemForEdit) {
         response = await axios.post(
-          "https://portfolio-mern-1-78st.onrender.com/api/portfolio/update-project",
+          "http://localhost:5000/api/portfolio/update-project",
           {
             ...values,
             _id: selectedItemForEdit._id,
@@ -36,7 +36,7 @@ function AdminProjects() {
         );
       } else {
         response = await axios.post(
-          "https://portfolio-mern-1-78st.onrender.com/api/portfolio/add-project",
+          "http://localhost:5000/api/portfolio/add-project",
           values
         );
       }
@@ -61,7 +61,7 @@ function AdminProjects() {
     try {
       dispatch(ShowLoading());
       const response = await axios.post(
-        "https://portfolio-mern-1-78st.onrender.com/api/portfolio/delete-project",
+        "http://localhost:5000/api/portfolio/delete-project",
         {
           _id: item._id,
         }
@@ -137,47 +137,47 @@ function AdminProjects() {
       </div>
 
       {/* {(type === "add" || selectedItemForEdit) && ( */}
-        <Modal
-          open={showAddEditModal}
-          title={selectedItemForEdit ? "Edit Project" : "Add Project"}
-          footer={null}
-          onCancel={() => {
-            setShowAddEditModal(false);
-            setSelectedItemForEdit(null);
-          }}
+      <Modal
+        open={showAddEditModal}
+        title={selectedItemForEdit ? "Edit Project" : "Add Project"}
+        footer={null}
+        onCancel={() => {
+          setShowAddEditModal(false);
+          setSelectedItemForEdit(null);
+        }}
+      >
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+          // initialValues={
+          //   {
+          //     ...selectedItemForEdit,
+          //     technologies: selectedItemForEdit?.technologies.join(", "),
+          //   } || {}
+          // }
         >
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={onFinish}
-            // initialValues={
-            //   {
-            //     ...selectedItemForEdit,
-            //     technologies: selectedItemForEdit?.technologies.join(", "),
-            //   } || {}
-            // }
-          >
-            <Form.Item name="title" label="Title">
-              <Input placeholder="Title" />
-            </Form.Item>
-            <Form.Item name="image" label="Image URL">
-              <Input placeholder="Image" />
-            </Form.Item>
+          <Form.Item name="title" label="Title">
+            <Input placeholder="Title" />
+          </Form.Item>
+          <Form.Item name="image" label="Image URL">
+            <Input placeholder="Image" />
+          </Form.Item>
 
-            <Form.Item name="description" label="Description">
-              <textarea placeholder="Description" />
-            </Form.Item>
+          <Form.Item name="description" label="Description">
+            <textarea placeholder="Description" />
+          </Form.Item>
 
-            <Form.Item name="link" label="Link">
-              <Input placeholder="Link" />
-            </Form.Item>
+          <Form.Item name="link" label="Link">
+            <Input placeholder="Link" />
+          </Form.Item>
 
-            <Form.Item name="technologies" label="Technologies">
-              <Input placeholder="Technologies" />
-            </Form.Item>
+          <Form.Item name="technologies" label="Technologies">
+            <Input placeholder="Technologies" />
+          </Form.Item>
 
-            <div className="flex justify-end">
-              {/* <button
+          <div className="flex justify-end">
+            {/* <button
                 className="border-primary text-primary px-5 py-2"
                 onClick={() => {
                   setShowAddEditModal(false);
@@ -186,12 +186,12 @@ function AdminProjects() {
               >
                 Cancel
               </button> */}
-              <button className="bg-primary text-white px-5 py-2" type="submit">
-                {selectedItemForEdit ? "Update" : "Add"}
-              </button>
-            </div>
-          </Form>
-        </Modal>
+            <button className="bg-primary text-white px-5 py-2" type="submit">
+              {selectedItemForEdit ? "Update" : "Add"}
+            </button>
+          </div>
+        </Form>
+      </Modal>
       {/* )} */}
     </div>
   );
